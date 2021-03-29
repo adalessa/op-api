@@ -87,4 +87,7 @@ COPY . /var/www
 # Setup working directory
 WORKDIR /var/www
 
-RUN composer install
+RUN php -r "file_exists('.env') || copy('.env.example', '.env');"
+RUN composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
+
+RUN php artisan key:generate
