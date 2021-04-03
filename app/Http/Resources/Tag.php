@@ -17,8 +17,8 @@ class Tag extends JsonResource
         return [
             'id' => $this->id,
             'wiki' => 'https://onepiece.fandom.com/'. $this->url,
-            'total_chapters' => $this->chapters()->count(),
             'aliases' => Alias::collection($this->aliases),
+            'total_chapters' => $this->chapters()->count(),
             'total_aliases' => $this->aliases->count(),
             'total_cover' => $this->chapters()->wherePivot('section', 'cover')->count(),
             'total_short' => $this->chapters()->wherePivot('section', 'short')->count(),

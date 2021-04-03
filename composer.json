@@ -18,7 +18,10 @@
         "laravel/sail": "^1.4",
         "mockery/mockery": "^1.4.2",
         "nunomaduro/collision": "^5.0",
-        "phpunit/phpunit": "^9.3.3"
+        "pestphp/pest": "^1.0",
+        "pestphp/pest-plugin-laravel": "^1.0",
+        "phpunit/phpunit": "^9.3.3",
+        "spatie/laravel-stubs": "^2.1"
     },
     "autoload": {
         "psr-4": {
@@ -42,6 +45,9 @@
         ],
         "post-create-project-cmd": [
             "@php artisan key:generate --ansi"
+        ],
+        "post-update-cmd": [
+            "@php artisan spatie-stub:publish"
         ]
     },
     "extra": {

@@ -19,6 +19,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/chapters/{chapter}', [ChapterController::class, 'show']);
+Route::post('/chapters', [ChapterController::class, 'store']);
 
 Route::get('/chapters/tag/{tag}', [ChapterTagController::class, 'index']);
 
