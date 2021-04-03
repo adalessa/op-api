@@ -8,7 +8,7 @@ use function Pest\Laravel\postJson;
 use function PHPUnit\Framework\assertCount;
 use function PHPUnit\Framework\assertNotNull;
 
-it('has createchapter page', function () {
+it('creates a new chapter', function () {
     $this->withoutExceptionHandling();
 
     $response = postJson('/api/chapters', [
@@ -47,6 +47,11 @@ it('has createchapter page', function () {
                     'alias' => 'luffy',
                     'name' => 'Monkey D. Luffy',
                     'wiki' => '/wiki/Monkey_D._Luffy',
+                ],
+                [
+                    'alias' => 'nami',
+                    'name' => 'Nami',
+                    'wiki' => '/wiki/nami',
                 ]
             ]
         ],
@@ -67,10 +72,10 @@ it('has createchapter page', function () {
 
     // related to a Reference which relates to an entity
     assertCount(1, $chapter->characters);
-    assertCount(1, $chapter->summary->references);
     assertCount(1, $chapter->shortSummary->references);
+    assertCount(2, $chapter->summary->references);
     assertCount(1, $chapter->cover->references);
 
-    assertCount(1, Entity::all());
-    assertCount(1, Reference::all());
+    assertCount(2, Entity::all());
+    assertCount(2, Reference::all());
 });
