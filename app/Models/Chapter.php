@@ -4,13 +4,19 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Chapter extends Model
 {
+
+    public const TYPE_COVER = 1;
+    public const TYPE_SHORT_SUMMARY = 2;
+    public const TYPE_SUMMARY = 3;
+    public const TYPE_CHARACTERS = 4;
+
     use HasFactory;
-    use HasReferences;
 
     public $guarded = [];
 
@@ -31,14 +37,21 @@ class Chapter extends Model
         return $this->hasOne(Cover::class);
     }
 
-    public function characters()
-    {
-        return $this->references();
+    public function entities(): BelongsToMany {
+        return $this->belongsToMany(Entity::class);
     }
 
-    public function addCharacters(array $characters)
-    {
-        return $this->addReference($characters);
+    public function characters(): BelongsToMany {
+        return $this->entities()->wherePivot('type' , self::TYPE_CHARACTERS);
+    }
+    public function shortSummaryReferences(): BelongsToMany {
+        return $this->entities()->wherePivot('type' , self::TYPE_SHORT_SUMMARY);
+    }
+    public function summaryReferences(): BelongsToMany {
+        return $this->entities()->wherePivot('type' , self::TYPE_SUMMARY);
+    }
+    public function coverReferences(): BelongsToMany {
+        return $this->entities()->wherePivot('type' , self::TYPE_COVER);
     }
 
     public function links(): HasMany
@@ -46,7 +59,7 @@ class Chapter extends Model
         return $this->hasMany(Link::class);
     }
 
-    public function addLink($site, $url): static
+    public function addLink(string $site, string $url): static
     {
         $this->links()->create([
             'site' => $site,

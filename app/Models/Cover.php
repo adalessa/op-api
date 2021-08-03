@@ -9,7 +9,6 @@ use Illuminate\Database\Eloquent\Model;
 class Cover extends Model
 {
     use HasFactory;
-    use HasReferences;
 
     public $guarded = [];
 }

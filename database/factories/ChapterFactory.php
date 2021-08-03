@@ -12,7 +12,9 @@ class ChapterFactory extends Factory
     public function definition()
     {
         return [
-            //
+            'number' => $this->faker->randomNumber(),
+            'title' => $this->faker->word,
+            'release_date' => $this->faker->date(),
         ];
     }
 }

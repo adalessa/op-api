@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\Chapter as ResourcesChapter;
+use App\Models\Cover;
 use App\Models\Chapter;
+use App\Models\Entity;
 use Illuminate\Http\Request;
 
 class ChapterController extends Controller
@@ -15,35 +17,47 @@ class ChapterController extends Controller
 
     public function store(Request $request)
     {
-        $chapter = Chapter::create([
+        /** @var Chapter $chapter */
+        $chapter = Chapter::firstOrCreate([
             'number' => $request->number,
+        ],[
             'title' => $request->title,
             'release_date' => $request->release_date,
         ]);
 
+        $chapter->entities()->sync([]);
+
         if ($request->has('cover')) {
-            $cover = $chapter->cover()->create([
+            $chapter->cover()->create([
                 'text' => $request->cover['text'],
                 'image' => $request->cover['image'],
             ]);
-            $cover->addReference($request->cover['references']);
+            collect($request->cover['references'])
+                ->map(fn ($ref) => Entity::firstOrCreate(['name' => $ref['name'], 'wiki_path' => $ref['wiki']]))
+                ->each(fn (Entity $entity) => $chapter->entities()->attach($entity->id, ["type" => Chapter::TYPE_COVER]));
         }
 
         if ($request->has('summary')) {
-            $summary = $chapter->summary()->create([
+            $chapter->summary()->create([
                 'text' => $request->summary['text'],
             ]);
-            $summary->addReference($request->summary['references']);
+            collect($request->summary['references'])
+                ->map(fn ($ref) => Entity::firstOrCreate(['name' => $ref['name'], 'wiki_path' => $ref['wiki']]))
+                ->each(fn (Entity $entity) => $chapter->entities()->attach($entity->id, ["type" => Chapter::TYPE_SUMMARY]));
         }
 
         if ($request->has('short_summary')) {
-            $summary = $chapter->shortSummary()->create([
+            $chapter->shortSummary()->create([
                 'text' => $request->short_summary['text'],
             ]);
-            $summary->addReference($request->short_summary['references']);
+            collect($request->short_summary['references'])
+                ->map(fn ($ref) => Entity::firstOrCreate(['name' => $ref['name'], 'wiki_path' => $ref['wiki']]))
+                ->each(fn (Entity $entity) => $chapter->entities()->attach($entity->id, ["type" => Chapter::TYPE_SHORT_SUMMARY]));
         }
 
-        $chapter->addCharacters($request->characters);
+        collect($request->characters)
+            ->map(fn ($ref) => Entity::firstOrCreate(['name' => $ref['name'], 'wiki_path' => $ref['wiki']]))
+            ->each(fn (Entity $entity) => $chapter->entities()->attach($entity->id, ["type" => Chapter::TYPE_CHARACTERS]));
 
         foreach ($request->links as $site => $link) {
             $chapter->addLink($site, $link);

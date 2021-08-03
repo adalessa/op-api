@@ -4,6 +4,7 @@ use App\Http\Controllers\AliasController;
 use App\Http\Controllers\ChapterAliasSectionController;
 use App\Http\Controllers\ChapterController;
 use App\Http\Controllers\ChapterTagController;
+use App\Http\Controllers\SearchController;
 use App\Http\Controllers\TagAliasController;
 use Illuminate\Support\Facades\Route;
 
@@ -28,3 +29,5 @@ Route::get('/tags/alias/{alias:name}', [TagAliasController::class, 'show']);
 Route::get('/aliases/{alias}', [AliasController::class, 'index']);
 
 Route::get('/chapters/{alias:name}/{section}', [ChapterAliasSectionController::class, 'index']);
+
+Route::get('/search/{entity:name}', [SearchController::class, 'search']);

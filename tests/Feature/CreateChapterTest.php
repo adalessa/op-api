@@ -24,7 +24,6 @@ it('creates a new chapter', function () {
             'image' => 'https://static.wikia.nocookie.net/onepiece/images/6/66/Chapter_1.png/revision/latest',
             'references' => [
                 [
-                    'alias' => 'luffy',
                     'name' => 'Monkey D. Luffy',
                     'wiki' => '/wiki/Monkey_D._Luffy',
                 ]
@@ -34,7 +33,6 @@ it('creates a new chapter', function () {
             'text' => 'details of the chapter',
             'references' => [
                 [
-                    'alias' => 'luffy',
                     'name' => 'Monkey D. Luffy',
                     'wiki' => '/wiki/Monkey_D._Luffy',
                 ]
@@ -44,12 +42,10 @@ it('creates a new chapter', function () {
             'text' => 'a more detailed text of the chapter',
             'references' => [
                 [
-                    'alias' => 'luffy',
                     'name' => 'Monkey D. Luffy',
                     'wiki' => '/wiki/Monkey_D._Luffy',
                 ],
                 [
-                    'alias' => 'nami',
                     'name' => 'Nami',
                     'wiki' => '/wiki/nami',
                 ]
@@ -57,7 +53,6 @@ it('creates a new chapter', function () {
         ],
         'characters' => [
             [
-                'alias' => 'luffy',
                 'name' => 'Monkey D. Luffy',
                 'wiki' => '/wiki/Monkey_D._Luffy',
             ]
@@ -72,10 +67,9 @@ it('creates a new chapter', function () {
 
     // related to a Reference which relates to an entity
     assertCount(1, $chapter->characters);
-    assertCount(1, $chapter->shortSummary->references);
-    assertCount(2, $chapter->summary->references);
-    assertCount(1, $chapter->cover->references);
+    assertCount(1, $chapter->shortSummaryReferences);
+    assertCount(2, $chapter->summaryReferences);
+    assertCount(1, $chapter->coverReferences);
 
     assertCount(2, Entity::all());
-    assertCount(2, Reference::all());
 });

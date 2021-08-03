@@ -9,7 +9,6 @@ use Illuminate\Database\Eloquent\Model;
 class ShortSummary extends Model
 {
     use HasFactory;
-    use HasReferences;
 
     public $guarded = [];
 }
