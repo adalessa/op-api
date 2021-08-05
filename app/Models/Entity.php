@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 use Illuminate\Database\Eloquent\Model;
@@ -14,14 +15,16 @@ class Entity extends Model
     public $guarded = [];
 
     public function chapters(): BelongsToMany {
-        return $this->belongsToMany(Chapter::class);
+        return $this->belongsToMany(Chapter::class)
+            ->orderBy('number');
     }
 
-    public function fisrtSeenIn(): ?Chapter {
-        return $this->chapters()->orderBy("number")->first();
-    }
+    public function chaptersByType(?int $type): BelongsToMany {
+        // TODO refactor with when maybe, it failed when try to use it
+        if (!$type) {
+            return $this->chapters();
+        }
 
-    public function lastSeenIn(): ?Chapter {
-        return $this->chapters()->orderBy("number", "desc")->first();
+        return $this->chapters()->wherePivot('type', $type);
     }
 }
