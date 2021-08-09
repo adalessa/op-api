@@ -2,11 +2,13 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Support\Facades\DB;
 
 class Chapter extends Model
 {
@@ -67,5 +69,26 @@ class Chapter extends Model
         ]);
 
         return $this;
+    }
+
+    public function scopeEncounters(Builder $query, array $entities, int $type): Builder
+    {
+        $chapterIds = ChapterEntity::whereHas('entities', function($query) use ($entities) {
+            return $query->whereIn('name', $entities);
+        })->where('type', $type)
+            ->select('chapter_id')
+              ->groupBy('chapter_id')
+              ->havingRaw('SUM(1) >= ?', [count($entities)]);
+
+        return $query->whereIn('id', $chapterIds);
+    }
+
+    public static function getAvailableTypes(): array {
+        return [
+            self::TYPE_CHARACTERS,
+            self::TYPE_COVER,
+            self::TYPE_SHORT_SUMMARY,
+            self::TYPE_SUMMARY,
+        ];
     }
 }

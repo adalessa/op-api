@@ -1,0 +1,105 @@
+<?php
+
+use App\Models\Chapter;
+use App\Models\Entity;
+
+use function Pest\Laravel\postJson;
+
+it('returns the chapter where 2 or more entities appears', function () {
+    $this->withoutExceptionHandling();
+
+    $chapters = Chapter::factory()->count(3)->create();
+
+    $zoro = Entity::factory()->create([
+        'name' => 'zoro',
+        'wiki_path' => '/wiki/zoro'
+    ]);
+    $chapters[0]->entities()->attach($zoro->id, ["type" => Chapter::TYPE_CHARACTERS]);
+    $chapters[1]->entities()->attach($zoro->id, ["type" => Chapter::TYPE_CHARACTERS]);
+
+    $sanji = Entity::factory()->create([
+        'name' => 'sanji',
+        'wiki_path' => '/wiki/sanji'
+    ]);
+
+    $chapters[1]->entities()->attach($sanji->id, ["type" => Chapter::TYPE_CHARACTERS]);
+    $chapters[2]->entities()->attach($sanji->id, ["type" => Chapter::TYPE_CHARACTERS]);
+
+    postJson(
+        "/api/entities/encounters",
+        ["entities" => ["zoro", "sanji"], "type" => Chapter::TYPE_CHARACTERS]
+    )->assertJsonPath('data.0.id', $chapters[1]->id);
+});
+
+it('return a validation error if one of the entities does not exists', function() {
+    $chapters = Chapter::factory()->count(3)->create();
+
+    $zoro = Entity::factory()->create([
+        'name' => 'zoro',
+        'wiki_path' => '/wiki/zoro'
+    ]);
+    $chapters[0]->entities()->attach($zoro->id, ["type" => Chapter::TYPE_CHARACTERS]);
+    $chapters[1]->entities()->attach($zoro->id, ["type" => Chapter::TYPE_CHARACTERS]);
+
+    $sanji = Entity::factory()->create([
+        'name' => 'sanji',
+        'wiki_path' => '/wiki/sanji'
+    ]);
+
+    $chapters[1]->entities()->attach($sanji->id, ["type" => Chapter::TYPE_CHARACTERS]);
+    $chapters[2]->entities()->attach($sanji->id, ["type" => Chapter::TYPE_CHARACTERS]);
+
+    postJson(
+        "/api/entities/encounters",
+        ["entities" => ["zoro", "sanji", "notfound"], "type" => Chapter::TYPE_CHARACTERS]
+    )->assertJsonValidationErrors('entities.2');
+});
+
+it('returns a validation error if the type is invalid', function() {
+    $chapters = Chapter::factory()->count(3)->create();
+
+    $zoro = Entity::factory()->create([
+        'name' => 'zoro',
+        'wiki_path' => '/wiki/zoro'
+    ]);
+    $chapters[0]->entities()->attach($zoro->id, ["type" => Chapter::TYPE_CHARACTERS]);
+    $chapters[1]->entities()->attach($zoro->id, ["type" => Chapter::TYPE_CHARACTERS]);
+
+    $sanji = Entity::factory()->create([
+        'name' => 'sanji',
+        'wiki_path' => '/wiki/sanji'
+    ]);
+
+    $chapters[1]->entities()->attach($sanji->id, ["type" => Chapter::TYPE_CHARACTERS]);
+    $chapters[2]->entities()->attach($sanji->id, ["type" => Chapter::TYPE_CHARACTERS]);
+
+    postJson(
+        "/api/entities/encounters",
+        ["entities" => ["zoro", "sanji"], "type" => 'invalid']
+    )->assertJsonValidationErrors('type');
+
+});
+
+it('returns a validation error if the type is not present', function() {
+    $chapters = Chapter::factory()->count(3)->create();
+
+    $zoro = Entity::factory()->create([
+        'name' => 'zoro',
+        'wiki_path' => '/wiki/zoro'
+    ]);
+    $chapters[0]->entities()->attach($zoro->id, ["type" => Chapter::TYPE_CHARACTERS]);
+    $chapters[1]->entities()->attach($zoro->id, ["type" => Chapter::TYPE_CHARACTERS]);
+
+    $sanji = Entity::factory()->create([
+        'name' => 'sanji',
+        'wiki_path' => '/wiki/sanji'
+    ]);
+
+    $chapters[1]->entities()->attach($sanji->id, ["type" => Chapter::TYPE_CHARACTERS]);
+    $chapters[2]->entities()->attach($sanji->id, ["type" => Chapter::TYPE_CHARACTERS]);
+
+    postJson(
+        "/api/entities/encounters",
+        ["entities" => ["zoro", "sanji"]]
+    )->assertJsonValidationErrors('type');
+});

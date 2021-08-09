@@ -4,7 +4,7 @@ use App\Http\Controllers\AliasController;
 use App\Http\Controllers\ChapterAliasSectionController;
 use App\Http\Controllers\ChapterController;
 use App\Http\Controllers\ChapterTagController;
-use App\Http\Controllers\EntitiesTogetherController;
+use App\Http\Controllers\EntitiesEncountersController;
 use App\Http\Controllers\EntityChapterController;
 use App\Http\Controllers\TagAliasController;
 use Illuminate\Support\Facades\Route;
@@ -33,4 +33,4 @@ Route::get('/chapters/{alias:name}/{section}', [ChapterAliasSectionController::c
 
 Route::get('/entities/chapters/{entity:name}', [EntityChapterController::class, 'show']);
 
-Route::post('/entities/together', [EntitiesTogetherController::class, 'index']);
+Route::post('/entities/encounters', [EntitiesEncountersController::class, 'index']);
