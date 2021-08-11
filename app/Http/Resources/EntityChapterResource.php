@@ -11,8 +11,8 @@ class EntityChapterResource extends JsonResource
         $type = $request->get("type");
 
         return [
-            "name" => $this->name,
-            "wiki" => $this->wiki_path,
+            "name" => $this->aliases()->default()->first()->name,
+            "wiki" => $this->wikiPath(),
             "chapters" => $this->chaptersByType($type)->get(['id'])->pluck('id'),
         ];
     }

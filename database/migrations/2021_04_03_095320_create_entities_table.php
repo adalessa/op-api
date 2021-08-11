@@ -10,7 +10,6 @@ class CreateEntitiesTable extends Migration
     {
         Schema::create('entities', function (Blueprint $table) {
             $table->id();
-            $table->string('name')->unique();
             $table->string('wiki_path')->unique();
             $table->timestamps();
         });

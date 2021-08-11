@@ -11,7 +11,7 @@ class EntitiesEncountersRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'entities.*' => 'exists:entities,name',
+            'entities.*' => 'required|exists:aliases,name',
             'type' => [
                 'required',
                 Rule::in(Chapter::getAvailableTypes()),

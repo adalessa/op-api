@@ -2,11 +2,12 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Entity extends Model
 {
@@ -17,6 +18,16 @@ class Entity extends Model
     public function chapters(): BelongsToMany {
         return $this->belongsToMany(Chapter::class)
             ->orderBy('number');
+    }
+
+    public function aliases(): HasMany
+    {
+        return $this->hasMany(Alias::class);
+    }
+
+    public function wikiPath(): string
+    {
+        return sprintf("%s%s",  config('app.wikibase'), $this->wiki_path);
     }
 
     public function chaptersByType(?int $type): BelongsToMany {

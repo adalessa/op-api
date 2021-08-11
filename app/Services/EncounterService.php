@@ -2,17 +2,18 @@
 
 namespace App\Services;
 
+use App\Models\Alias;
 use App\Models\Chapter;
 use App\Models\Entity;
 
 class EncounterService
 {
-    private array $entitiesNames;
+    private array $aliases;
     private int $type;
 
-    public function of(array $entitiesNames): self
+    public function of(array $aliases): self
     {
-        $this->entitiesNames = $entitiesNames;
+        $this->aliases = $aliases;
 
         return $this;
     }
@@ -26,7 +27,9 @@ class EncounterService
 
     public function get(): Encounter
     {
-        $entities = Entity::whereIn('name', $this->entitiesNames)->get();
+        $entities = Entity::whereHas('aliases', function($query) {
+            return $query->whereIn('name', $this->aliases);
+        })->get();
 
         $chapters = Chapter::encounters($entities->pluck('id')->all(), $this->type)->get();
 

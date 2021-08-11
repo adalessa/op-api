@@ -12,8 +12,9 @@ it('returns the entity with the list of chapters', function() {
         ->hasAttached(
             Chapter::factory()->count(5),
             ["type" => Chapter::TYPE_CHARACTERS],
-        )->create([
-            'name' => 'zoro',
+        )
+        ->hasAliases(1, ['name' => 'zoro', 'default' => true])
+        ->create([
             'wiki_path' => '/wiki/zoro'
         ]);
 
@@ -31,8 +32,9 @@ it('returns all the types if no type is provided', function() {
         ->hasAttached(
             Chapter::factory()->count(5),
             ["type" => Chapter::TYPE_SUMMARY],
-        )->create([
-            'name' => 'zoro',
+        )
+        ->hasAliases(1, ['name' => 'zoro', 'default' => true])
+        ->create([
             'wiki_path' => '/wiki/zoro'
         ]);
 
@@ -50,8 +52,9 @@ it('returns the any relationship if none is provided', function() {
         ->hasAttached(
             Chapter::factory()->count(5),
             ["type" => Chapter::TYPE_SUMMARY],
-        )->create([
-            'name' => 'zoro',
+        )
+        ->hasAliases(1, ['name' => 'zoro', 'default' => true])
+        ->create([
             'wiki_path' => '/wiki/zoro'
         ]);
 
@@ -69,12 +72,37 @@ it('returns the given relationship on the request', function() {
         ->hasAttached(
             Chapter::factory()->count(5),
             ["type" => Chapter::TYPE_SUMMARY],
-        )->create([
-            'name' => 'zoro',
+        )
+        ->hasAliases(1, ['name' => 'zoro', 'default' => true])
+        ->create([
             'wiki_path' => '/wiki/zoro'
         ]);
 
     get("/api/entities/chapters/zoro?type=3")
+        ->assertStatus(200)
+        ->assertJsonCount(5, "data.chapters")
+        ->assertJsonPath("data.name", "zoro")
+        ->assertJsonPath("data.wiki", "/wiki/zoro");
+});
+
+it('returns the entity with the list of chapters looking for an alias', function() {
+    $this->withoutExceptionHandling();
+
+    Entity::factory()
+        ->hasAttached(
+            Chapter::factory()->count(5),
+            ["type" => Chapter::TYPE_CHARACTERS],
+        )->hasAliases(1, [
+            'name' => 'Roronoa',
+            'default' => false,
+        ])->hasAliases(1, [
+            'name' => 'zoro',
+            'default' => true,
+        ])->create([
+            'wiki_path' => '/wiki/zoro'
+        ]);
+
+    get("/api/entities/chapters/Roronoa")
         ->assertStatus(200)
         ->assertJsonCount(5, "data.chapters")
         ->assertJsonPath("data.name", "zoro")

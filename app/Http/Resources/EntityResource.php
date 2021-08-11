@@ -8,6 +8,9 @@ class EntityResource extends JsonResource
 {
     public function toArray($request)
     {
-        return parent::toArray($request);
+        return [
+            'name' => $this->aliases()->default()->first()->name,
+            'wiki' => $this->wikiPath(),
+        ];
     }
 }

@@ -3,11 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\EntityChapterResource;
-use App\Models\Entity;
+use App\Models\Alias;
 
 class EntityChapterController
 {
-    public function show(Entity $entity){
-        return new EntityChapterResource($entity);
+    public function show(Alias $alias){
+        return new EntityChapterResource($alias->entity);
     }
 }

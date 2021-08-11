@@ -31,6 +31,6 @@ Route::get('/aliases/{alias}', [AliasController::class, 'index']);
 
 Route::get('/chapters/{alias:name}/{section}', [ChapterAliasSectionController::class, 'index']);
 
-Route::get('/entities/chapters/{entity:name}', [EntityChapterController::class, 'show']);
+Route::get('/entities/chapters/{alias:name}', [EntityChapterController::class, 'show']);
 
 Route::post('/entities/encounters', [EntitiesEncountersController::class, 'index']);

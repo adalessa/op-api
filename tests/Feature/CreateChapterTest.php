@@ -2,7 +2,6 @@
 
 use App\Models\Chapter;
 use App\Models\Entity;
-use App\Models\Reference;
 
 use function Pest\Laravel\postJson;
 use function PHPUnit\Framework\assertCount;
@@ -24,7 +23,7 @@ it('creates a new chapter', function () {
             'image' => 'https://static.wikia.nocookie.net/onepiece/images/6/66/Chapter_1.png/revision/latest',
             'references' => [
                 [
-                    'name' => 'Monkey D. Luffy',
+                    'name' => 'Luffy',
                     'wiki' => '/wiki/Monkey_D._Luffy',
                 ]
             ]
@@ -33,7 +32,7 @@ it('creates a new chapter', function () {
             'text' => 'details of the chapter',
             'references' => [
                 [
-                    'name' => 'Monkey D. Luffy',
+                    'name' => 'luffy',
                     'wiki' => '/wiki/Monkey_D._Luffy',
                 ]
             ]
