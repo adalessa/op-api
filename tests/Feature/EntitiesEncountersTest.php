@@ -28,7 +28,9 @@ it('returns the chapter where 2 or more entities appears', function () {
     postJson(
         "/api/entities/encounters",
         ["entities" => ["zoro", "sanji"], "type" => Chapter::TYPE_CHARACTERS]
-    )->assertJsonPath('data.0.id', $chapters[1]->id);
+    )->assertJsonPath('data.chapters.0.id', $chapters[1]->id)
+     ->assertJsonCount(2, 'data.entities')
+     ->assertJsonPath('data.times', 1);
 });
 
 it('return a validation error if one of the entities does not exists', function() {

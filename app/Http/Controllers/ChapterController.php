@@ -2,8 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\Chapter as ResourcesChapter;
-use App\Models\Cover;
+use App\Http\Resources\ChapterResource;
 use App\Models\Chapter;
 use App\Models\Entity;
 use Illuminate\Http\Request;
@@ -12,7 +11,7 @@ class ChapterController extends Controller
 {
     public function show(Chapter $chapter)
     {
-        return new ResourcesChapter($chapter);
+        return new ChapterResource($chapter);
     }
 
     public function store(Request $request)
@@ -63,6 +62,6 @@ class ChapterController extends Controller
             $chapter->addLink($site, $link);
         }
 
-        return new ResourcesChapter($chapter);
+        return new ChapterResource($chapter);
     }
 }

@@ -71,14 +71,14 @@ class Chapter extends Model
         return $this;
     }
 
-    public function scopeEncounters(Builder $query, array $entities, int $type): Builder
+    public function scopeEncounters(Builder $query, array $entitiesIds, int $type): Builder
     {
-        $chapterIds = ChapterEntity::whereHas('entities', function($query) use ($entities) {
-            return $query->whereIn('name', $entities);
+        $chapterIds = ChapterEntity::whereHas('entities', function($query) use ($entitiesIds) {
+            return $query->whereIn('id', $entitiesIds);
         })->where('type', $type)
             ->select('chapter_id')
               ->groupBy('chapter_id')
-              ->havingRaw('SUM(1) >= ?', [count($entities)]);
+              ->havingRaw('SUM(1) >= ?', [count($entitiesIds)]);
 
         return $query->whereIn('id', $chapterIds);
     }
