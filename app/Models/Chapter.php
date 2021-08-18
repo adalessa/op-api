@@ -2,13 +2,15 @@
 
 namespace App\Models;
 
+use App\DTO\Chapter as ChapterDTO;
+use App\DTO\Link as LinkDTO;
+use App\DTO\Reference;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
-use Illuminate\Support\Facades\DB;
 
 class Chapter extends Model
 {
@@ -90,5 +92,68 @@ class Chapter extends Model
             self::TYPE_SHORT_SUMMARY,
             self::TYPE_SUMMARY,
         ];
+    }
+
+    private function removeEntities()
+    {
+        $this->entities()->sync([]);
+    }
+
+    public static function fromDto(ChapterDTO $dto): self {
+        /** @var Chapter $chapter */
+        $chapter = self::firstOrCreate([
+            'number' => $dto->getNumber(),
+        ],[
+            'title' => $dto->getTitle(),
+            'release_date' => $dto->getReleaseDate(),
+        ]);
+
+        $chapter->removeEntities();
+
+        $coverDto = $dto->getCover();
+        $chapter->cover()->create([
+            'text' => $coverDto->getText(),
+            'image' => $coverDto->getImage(),
+        ]);
+        $chapter->addEntities($coverDto->getReferences(), self::TYPE_COVER);
+
+        $summaryDto = $dto->getSummary();
+        $chapter->summary()->create([
+            'text' => $summaryDto->getText(),
+        ]);
+        $chapter->addEntities($summaryDto->getReferences(), self::TYPE_SUMMARY);
+
+
+        $shortSummaryDto = $dto->getShortSummary();
+        $chapter->shortSummary()->create([
+            'text' => $shortSummaryDto->getText(),
+        ]);
+        $chapter->addEntities($shortSummaryDto->getReferences(), self::TYPE_SHORT_SUMMARY);
+
+        array_map(
+            fn (LinkDTO $link) => $chapter->addLink($link->getName(), $link->getValue()),
+            $dto->getLinks()
+            );
+
+        $chapter->addEntities($dto->getCharacters(), self::TYPE_CHARACTERS);
+
+        return $chapter;
+    }
+
+    /**
+     * @param Reference[] $references
+     */
+    private function addEntities(array $references, int $type): void
+    {
+        collect($references)
+            ->map(function (Reference $ref) {
+                /** @var Entity $entity */
+                $entity = Entity::firstOrCreate(['wiki_path' => $ref->getWiki()]);
+
+                $entity->aliases()->firstOrCreate(['name' => $ref->getName(), 'default' => $entity->wasRecentlyCreated]);
+
+                return $entity;
+            })
+            ->each(fn (Entity $entity) => $this->entities()->attach($entity->id, ["type" => $type]));
     }
 }
