@@ -8,7 +8,6 @@ use function PHPUnit\Framework\assertCount;
 use function PHPUnit\Framework\assertNotNull;
 
 it('creates a new chapter', function () {
-    $this->withoutExceptionHandling();
     $response = postJson('/api/chapters', getChapterData());
 
     $response->assertStatus(201);
@@ -26,115 +25,40 @@ it('creates a new chapter', function () {
     assertCount(2, Entity::all());
 });
 
-it('requires a number of the chapter')
-    ->postJson('/api/chapters', getChapterData(['number' => null]))
-    ->assertJsonValidationErrors('number');
+it("validates the chapter data", function ($field, $data, $error) {
+    postJson('/api/chapters', getChapterData([$field => $data]))
+        ->assertJsonValidationErrors($error);
+})->with([
+    ['number',       null, 'number'],
+    ['title',        null, 'title'],
+    ['release_date', null, 'release_date'],
+    ['release_date', 'not a date', 'release_date'],
+    ['links',        [["name" => "test", "value" => "not a url"]], 'links.0.value'],
 
-it('requires a title of the chapter')
-    ->postJson('/api/chapters', getChapterData(['title' => null]))
-    ->assertJsonValidationErrors('title');
+    ['cover', null, 'cover'],
+    ['cover', ['text' => null], 'cover.text'],
+    ['cover', ['image' => null], 'cover.image'],
+    ['cover', ['image' => "not a url"], 'cover.image'],
+    ['cover', ['references' => []], 'cover.references'],
+    ['cover', ['references' => [["name" => null]]], 'cover.references.0.name'],
+    ['cover', ['references' => [["wiki" => null]]], 'cover.references.0.wiki'],
 
-it('requires a release date of the chapter')
-    ->postJson('/api/chapters', getChapterData(['release_date' => null]))
-    ->assertJsonValidationErrors('release_date');
+    ['short_summary', null, 'short_summary'],
+    ['short_summary', ['text' => null], 'short_summary.text'],
+    ['short_summary', ['references' => []], 'short_summary.references'],
+    ['short_summary', ['references' => [["name" => null]]], 'short_summary.references.0.name'],
+    ['short_summary', ['references' => [["wiki" => null]]], 'short_summary.references.0.wiki'],
 
-it('requires a release date to be a date of the chapter')
-    ->postJson('/api/chapters', getChapterData(['release_date' => "not a date"]))
-    ->assertJsonValidationErrors('release_date');
+    ['summary', null, 'summary'],
+    ['summary', ['text' => null], 'summary.text'],
+    ['summary', ['references' => []], 'summary.references'],
+    ['summary', ['references' => [["name" => null]]], 'summary.references.0.name'],
+    ['summary', ['references' => [["wiki" => null]]], 'summary.references.0.wiki'],
 
-it('can have empty links')
-    ->postJson('/api/chapters', getChapterData(['links' => []]))
-    ->assertJsonMissingValidationErrors('links');
-
-it('the links need to be a url')
-    ->postJson('/api/chapters', getChapterData(['links' => [
-        [
-            "name" => "test",
-            "value" => "not a url",
-        ]
-    ]]))->assertJsonValidationErrors('links.0.value');
-
-it('requires a cover for the chapter')
-    ->postJson('/api/chapters', getChapterData(['cover' => null]))
-    ->assertJsonValidationErrors('cover');
-
-it('requires a cover text for the chapter')
-    ->postJson('/api/chapters', getChapterData(['cover' => ['text' => null]]))
-    ->assertJsonValidationErrors('cover.text');
-
-it('requires a cover image for the chapter')
-    ->postJson('/api/chapters', getChapterData(['cover' => ['image' => null]]))
-    ->assertJsonValidationErrors('cover.image');
-
-it('cover image needs to be a url')
-    ->postJson('/api/chapters', getChapterData(['cover' => ['image' => "not a url"]]))
-    ->assertJsonValidationErrors('cover.image');
-
-it('requires cover references')
-    ->postJson('/api/chapters', getChapterData(['cover' => ['references' => []]]))
-    ->assertJsonValidationErrors('cover.references');
-
-it('requires cover references name')
-    ->postJson('/api/chapters', getChapterData(['cover' => ['references' => [["name" => null]]]]))
-    ->assertJsonValidationErrors('cover.references.0.name');
-
-it('requires cover references wiki')
-    ->postJson('/api/chapters', getChapterData(['cover' => ['references' => [["wiki" => null]]]]))
-    ->assertJsonValidationErrors('cover.references.0.wiki');
-
-it('requires a short summary for the chapter')
-    ->postJson('/api/chapters', getChapterData(['short_summary' => null]))
-    ->assertJsonValidationErrors('short_summary');
-
-it('requires a short summary text for the chapter')
-    ->postJson('/api/chapters', getChapterData(['short_summary' => ['text' => null]]))
-    ->assertJsonValidationErrors('short_summary.text');
-
-it('requires short summary references')
-    ->postJson('/api/chapters', getChapterData(['short_summary' => ['references' => []]]))
-    ->assertJsonValidationErrors('short_summary.references');
-
-it('requires short summary references name')
-    ->postJson('/api/chapters', getChapterData(['short_summary' => ['references' => [["name" => null]]]]))
-    ->assertJsonValidationErrors('short_summary.references.0.name');
-
-it('requires short summary references wiki')
-    ->postJson('/api/chapters', getChapterData(['short_summary' => ['references' => [["wiki" => null]]]]))
-    ->assertJsonValidationErrors('short_summary.references.0.wiki');
-
-
-it('requires a summary for the chapter')
-    ->postJson('/api/chapters', getChapterData(['summary' => null]))
-    ->assertJsonValidationErrors('summary');
-
-it('requires a summary text for the chapter')
-    ->postJson('/api/chapters', getChapterData(['summary' => ['text' => null]]))
-    ->assertJsonValidationErrors('summary.text');
-
-
-it('requires summary references')
-    ->postJson('/api/chapters', getChapterData(['summary' => ['references' => []]]))
-    ->assertJsonValidationErrors('summary.references');
-
-it('requires summary references name')
-    ->postJson('/api/chapters', getChapterData(['summary' => ['references' => [["name" => null]]]]))
-    ->assertJsonValidationErrors('summary.references.0.name');
-
-it('requires summary references wiki')
-    ->postJson('/api/chapters', getChapterData(['summary' => ['references' => [["wiki" => null]]]]))
-    ->assertJsonValidationErrors('summary.references.0.wiki');
-
-it('requires characters')
-    ->postJson('/api/chapters', getChapterData(['characters' => []]))
-    ->assertJsonValidationErrors('characters');
-
-it('requires characters name')
-    ->postJson('/api/chapters', getChapterData(['characters' => [["name" => null]]]))
-    ->assertJsonValidationErrors('characters.0.name');
-
-it('requires characters wiki')
-    ->postJson('/api/chapters', getChapterData(['characters' => [["wiki" => null]]]))
-    ->assertJsonValidationErrors('characters.0.wiki');
+    ['characters', [], 'characters'],
+    ['characters', [["name" => null]], 'characters.0.name'],
+    ['characters', [["wiki" => null]], 'characters.0.wiki'],
+]);
 
 function getChapterData(array $overwrite = []): array {
     return array_merge([
