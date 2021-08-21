@@ -5,10 +5,14 @@ namespace App\Http\Controllers;
 use App\Http\Requests\EntitiesEncountersRequest;
 use App\Http\Resources\EncounterResource;
 use Facades\App\Services\EncounterService;
+use Spatie\RouteAttributes\Attributes\Post;
+use Spatie\RouteAttributes\Attributes\Prefix;
 
+#[Prefix('api/entities/encounters')]
 class EntitiesEncountersController
 {
-    public function index(EntitiesEncountersRequest $request) {
+    #[Post('/search')]
+    public function search(EntitiesEncountersRequest $request) {
 
         $validated = $request->validated();
 
