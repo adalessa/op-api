@@ -79,8 +79,8 @@ class Chapter extends Model
             return $query->whereIn('id', $entitiesIds);
         })->where('type', $type)
             ->select('chapter_id')
-              ->groupBy('chapter_id')
-              ->havingRaw('SUM(1) >= ?', [count($entitiesIds)]);
+            ->groupBy('chapter_id')
+            ->havingRaw('SUM(1) >= ?', [count($entitiesIds)]);
 
         return $query->whereIn('id', $chapterIds);
     }
