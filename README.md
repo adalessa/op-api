@@ -30,4 +30,12 @@ MPV
 
 
 ## TODO:
-- Chapter by number since now is by id
+- Deploy to the nas
+- review the import
+- review the bot
+- deploy bot
+
+## after mvp
+- [ ] add user and token suport
+- [ ] scheduluar import para nuevos capitulos
+
