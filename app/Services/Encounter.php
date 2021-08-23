@@ -9,7 +9,7 @@ class Encounter
     public function __construct(
         private Collection $entities,
         private Collection $chapters,
-        private int $type,
+        private string $type,
     ) {
     }
 

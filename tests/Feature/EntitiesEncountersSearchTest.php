@@ -1,5 +1,6 @@
 <?php
 
+use App\EntityTypesEnum;
 use App\Models\Chapter;
 use App\Models\Entity;
 
@@ -15,8 +16,8 @@ it('returns the chapter where 2 or more entities appears', function () {
         ->create([
         'wiki_path' => '/wiki/zoro'
     ]);
-    $chapters[0]->entities()->attach($zoro->id, ["type" => Chapter::TYPE_CHARACTERS]);
-    $chapters[1]->entities()->attach($zoro->id, ["type" => Chapter::TYPE_CHARACTERS]);
+    $chapters[0]->entities()->attach($zoro->id, ["type" => EntityTypesEnum::map[EntityTypesEnum::TYPE_CHARACTERS]]);
+    $chapters[1]->entities()->attach($zoro->id, ["type" => EntityTypesEnum::map[EntityTypesEnum::TYPE_CHARACTERS]]);
 
     $sanji = Entity::factory()
         ->hasAliases(1, ['name' => 'sanji', 'default' => true])
@@ -24,12 +25,12 @@ it('returns the chapter where 2 or more entities appears', function () {
         'wiki_path' => '/wiki/sanji'
     ]);
 
-    $chapters[1]->entities()->attach($sanji->id, ["type" => Chapter::TYPE_CHARACTERS]);
-    $chapters[2]->entities()->attach($sanji->id, ["type" => Chapter::TYPE_CHARACTERS]);
+    $chapters[1]->entities()->attach($sanji->id, ["type" => EntityTypesEnum::map[EntityTypesEnum::TYPE_CHARACTERS]]);
+    $chapters[2]->entities()->attach($sanji->id, ["type" => EntityTypesEnum::map[EntityTypesEnum::TYPE_CHARACTERS]]);
 
     postJson(
         route('entities-encounters.search'),
-        ["entities" => ["zoro", "sanji"], "type" => Chapter::TYPE_CHARACTERS]
+        ["entities" => ["zoro", "sanji"], "type" => EntityTypesEnum::TYPE_CHARACTERS]
     )->assertJsonPath('data.chapters.0.id', $chapters[1]->id)
      ->assertJsonCount(2, 'data.entities')
      ->assertJsonPath('data.times', 1);
@@ -43,8 +44,8 @@ it('return a validation error if one of the entities does not exists', function(
         ->create([
         'wiki_path' => '/wiki/zoro'
     ]);
-    $chapters[0]->entities()->attach($zoro->id, ["type" => Chapter::TYPE_CHARACTERS]);
-    $chapters[1]->entities()->attach($zoro->id, ["type" => Chapter::TYPE_CHARACTERS]);
+    $chapters[0]->entities()->attach($zoro->id, ["type" => EntityTypesEnum::map[EntityTypesEnum::TYPE_CHARACTERS]]);
+    $chapters[1]->entities()->attach($zoro->id, ["type" => EntityTypesEnum::map[EntityTypesEnum::TYPE_CHARACTERS]]);
 
     $sanji = Entity::factory()
         ->hasAliases(1, ['name' => 'sanji', 'default' => true])
@@ -52,12 +53,12 @@ it('return a validation error if one of the entities does not exists', function(
         'wiki_path' => '/wiki/sanji'
     ]);
 
-    $chapters[1]->entities()->attach($sanji->id, ["type" => Chapter::TYPE_CHARACTERS]);
-    $chapters[2]->entities()->attach($sanji->id, ["type" => Chapter::TYPE_CHARACTERS]);
+    $chapters[1]->entities()->attach($sanji->id, ["type" => EntityTypesEnum::map[EntityTypesEnum::TYPE_CHARACTERS]]);
+    $chapters[2]->entities()->attach($sanji->id, ["type" => EntityTypesEnum::map[EntityTypesEnum::TYPE_CHARACTERS]]);
 
     postJson(
         route('entities-encounters.search'),
-        ["entities" => ["zoro", "sanji", "notfound"], "type" => Chapter::TYPE_CHARACTERS]
+        ["entities" => ["zoro", "sanji", "notfound"], "type" => EntityTypesEnum::TYPE_CHARACTERS]
     )->assertJsonValidationErrors('entities.2');
 });
 
@@ -69,8 +70,8 @@ it('returns a validation error if the type is invalid', function() {
         ->create([
         'wiki_path' => '/wiki/zoro'
     ]);
-    $chapters[0]->entities()->attach($zoro->id, ["type" => Chapter::TYPE_CHARACTERS]);
-    $chapters[1]->entities()->attach($zoro->id, ["type" => Chapter::TYPE_CHARACTERS]);
+    $chapters[0]->entities()->attach($zoro->id, ["type" => EntityTypesEnum::map[EntityTypesEnum::TYPE_CHARACTERS]]);
+    $chapters[1]->entities()->attach($zoro->id, ["type" => EntityTypesEnum::map[EntityTypesEnum::TYPE_CHARACTERS]]);
 
     $sanji = Entity::factory()
         ->hasAliases(1, ['name' => 'sanji', 'default' => true])
@@ -78,8 +79,8 @@ it('returns a validation error if the type is invalid', function() {
         'wiki_path' => '/wiki/sanji'
     ]);
 
-    $chapters[1]->entities()->attach($sanji->id, ["type" => Chapter::TYPE_CHARACTERS]);
-    $chapters[2]->entities()->attach($sanji->id, ["type" => Chapter::TYPE_CHARACTERS]);
+    $chapters[1]->entities()->attach($sanji->id, ["type" => EntityTypesEnum::map[EntityTypesEnum::TYPE_CHARACTERS]]);
+    $chapters[2]->entities()->attach($sanji->id, ["type" => EntityTypesEnum::map[EntityTypesEnum::TYPE_CHARACTERS]]);
 
     postJson(
         route('entities-encounters.search'),
@@ -96,8 +97,8 @@ it('returns a validation error if the type is not present', function() {
         ->create([
         'wiki_path' => '/wiki/zoro'
     ]);
-    $chapters[0]->entities()->attach($zoro->id, ["type" => Chapter::TYPE_CHARACTERS]);
-    $chapters[1]->entities()->attach($zoro->id, ["type" => Chapter::TYPE_CHARACTERS]);
+    $chapters[0]->entities()->attach($zoro->id, ["type" => EntityTypesEnum::map[EntityTypesEnum::TYPE_CHARACTERS]]);
+    $chapters[1]->entities()->attach($zoro->id, ["type" => EntityTypesEnum::map[EntityTypesEnum::TYPE_CHARACTERS]]);
 
     $sanji = Entity::factory()
         ->hasAliases(1, ['name' => 'sanji', 'default' => true])
@@ -105,8 +106,8 @@ it('returns a validation error if the type is not present', function() {
         'wiki_path' => '/wiki/sanji'
     ]);
 
-    $chapters[1]->entities()->attach($sanji->id, ["type" => Chapter::TYPE_CHARACTERS]);
-    $chapters[2]->entities()->attach($sanji->id, ["type" => Chapter::TYPE_CHARACTERS]);
+    $chapters[1]->entities()->attach($sanji->id, ["type" => EntityTypesEnum::map[EntityTypesEnum::TYPE_CHARACTERS]]);
+    $chapters[2]->entities()->attach($sanji->id, ["type" => EntityTypesEnum::map[EntityTypesEnum::TYPE_CHARACTERS]]);
 
     postJson(
         route('entities-encounters.search'),
@@ -126,8 +127,8 @@ it('returns the chapter where 2 or more entities appears searching with alias', 
         'wiki_path' => '/wiki/zoro'
     ]);
 
-    $chapters[0]->entities()->attach($zoro->id, ["type" => Chapter::TYPE_CHARACTERS]);
-    $chapters[1]->entities()->attach($zoro->id, ["type" => Chapter::TYPE_CHARACTERS]);
+    $chapters[0]->entities()->attach($zoro->id, ["type" => EntityTypesEnum::map[EntityTypesEnum::TYPE_CHARACTERS]]);
+    $chapters[1]->entities()->attach($zoro->id, ["type" => EntityTypesEnum::map[EntityTypesEnum::TYPE_CHARACTERS]]);
 
     $sanji = Entity::factory()
         ->hasAliases(1, ['name' => 'sanji', 'default' => true])
@@ -135,12 +136,12 @@ it('returns the chapter where 2 or more entities appears searching with alias', 
         'wiki_path' => '/wiki/sanji'
     ]);
 
-    $chapters[1]->entities()->attach($sanji->id, ["type" => Chapter::TYPE_CHARACTERS]);
-    $chapters[2]->entities()->attach($sanji->id, ["type" => Chapter::TYPE_CHARACTERS]);
+    $chapters[1]->entities()->attach($sanji->id, ["type" => EntityTypesEnum::map[EntityTypesEnum::TYPE_CHARACTERS]]);
+    $chapters[2]->entities()->attach($sanji->id, ["type" => EntityTypesEnum::map[EntityTypesEnum::TYPE_CHARACTERS]]);
 
     postJson(
         route('entities-encounters.search'),
-        ["entities" => ["Roronoa", "sanji"], "type" => Chapter::TYPE_CHARACTERS]
+        ["entities" => ["Roronoa", "sanji"], "type" => EntityTypesEnum::TYPE_CHARACTERS]
     )->assertJsonPath('data.chapters.0.id', $chapters[1]->id)
      ->assertJsonCount(2, 'data.entities')
      ->assertJsonPath('data.times', 1);

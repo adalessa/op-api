@@ -11,6 +11,7 @@ class EntityResource extends JsonResource
         return [
             'name' => $this->aliases()->default()->first()->name,
             'wiki' => $this->wikiPath(),
+            'aliases' => AliasResource::collection($this->aliases)
         ];
     }
 }

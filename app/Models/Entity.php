@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\EntityTypesEnum;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 use Illuminate\Database\Eloquent\Model;
@@ -29,12 +30,17 @@ class Entity extends Model
         return sprintf("%s%s",  config('app.wikibase'), $this->wiki_path);
     }
 
-    public function chaptersByType(?int $type): BelongsToMany {
+    public function path(): string
+    {
+        return route('entity.show', $this->id);
+    }
+
+    public function chaptersByType(?string $type): BelongsToMany {
         // TODO refactor with when maybe, it failed when try to use it
         if (!$type) {
             return $this->chapters();
         }
 
-        return $this->chapters()->wherePivot('type', $type);
+        return $this->chapters()->wherePivot('type', EntityTypesEnum::map[$type]);
     }
 }

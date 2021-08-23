@@ -12,7 +12,7 @@ use Spatie\RouteAttributes\Attributes\Post;
 #[Prefix('api/chapters')]
 class ChapterController extends Controller
 {
-    #[Get('/{chapter}', name: 'chapters.show')]
+    #[Get('/{chapter:number}', name: 'chapters.show')]
     public function show(Chapter $chapter)
     {
         return new ChapterResource($chapter);

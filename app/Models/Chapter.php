@@ -5,6 +5,7 @@ namespace App\Models;
 use App\DTO\Chapter as ChapterDTO;
 use App\DTO\Link as LinkDTO;
 use App\DTO\Reference;
+use App\EntityTypesEnum;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -14,12 +15,6 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Chapter extends Model
 {
-
-    public const TYPE_COVER = 1;
-    public const TYPE_SHORT_SUMMARY = 2;
-    public const TYPE_SUMMARY = 3;
-    public const TYPE_CHARACTERS = 4;
-
     use HasFactory;
 
     public $guarded = [];
@@ -46,16 +41,16 @@ class Chapter extends Model
     }
 
     public function characters(): BelongsToMany {
-        return $this->entities()->wherePivot('type' , self::TYPE_CHARACTERS);
+        return $this->entities()->wherePivot('type' , EntityTypesEnum::map[EntityTypesEnum::TYPE_CHARACTERS]);
     }
     public function shortSummaryReferences(): BelongsToMany {
-        return $this->entities()->wherePivot('type' , self::TYPE_SHORT_SUMMARY);
+        return $this->entities()->wherePivot('type' , EntityTypesEnum::map[EntityTypesEnum::TYPE_SHORT_SUMMARY]);
     }
     public function summaryReferences(): BelongsToMany {
-        return $this->entities()->wherePivot('type' , self::TYPE_SUMMARY);
+        return $this->entities()->wherePivot('type' , EntityTypesEnum::map[EntityTypesEnum::TYPE_SUMMARY]);
     }
     public function coverReferences(): BelongsToMany {
-        return $this->entities()->wherePivot('type' , self::TYPE_COVER);
+        return $this->entities()->wherePivot('type' , EntityTypesEnum::map[EntityTypesEnum::TYPE_COVER]);
     }
 
     public function links(): HasMany
@@ -65,7 +60,7 @@ class Chapter extends Model
 
     public function path(): string
     {
-        return route('chapters.show', $this->id);
+        return route('chapters.show', $this->number);
     }
 
     public function addLink(string $site, string $url): static
@@ -90,15 +85,6 @@ class Chapter extends Model
         return $query->whereIn('id', $chapterIds);
     }
 
-    public static function getAvailableTypes(): array {
-        return [
-            self::TYPE_CHARACTERS,
-            self::TYPE_COVER,
-            self::TYPE_SHORT_SUMMARY,
-            self::TYPE_SUMMARY,
-        ];
-    }
-
     private function removeEntities()
     {
         $this->entities()->sync([]);
@@ -120,27 +106,27 @@ class Chapter extends Model
             'text' => $coverDto->getText(),
             'image' => $coverDto->getImage(),
         ]);
-        $chapter->addEntities($coverDto->getReferences(), self::TYPE_COVER);
+        $chapter->addEntities($coverDto->getReferences(), EntityTypesEnum::map[EntityTypesEnum::TYPE_COVER]);
 
         $summaryDto = $dto->getSummary();
         $chapter->summary()->create([
             'text' => $summaryDto->getText(),
         ]);
-        $chapter->addEntities($summaryDto->getReferences(), self::TYPE_SUMMARY);
+        $chapter->addEntities($summaryDto->getReferences(), EntityTypesEnum::map[EntityTypesEnum::TYPE_SUMMARY]);
 
 
         $shortSummaryDto = $dto->getShortSummary();
         $chapter->shortSummary()->create([
             'text' => $shortSummaryDto->getText(),
         ]);
-        $chapter->addEntities($shortSummaryDto->getReferences(), self::TYPE_SHORT_SUMMARY);
+        $chapter->addEntities($shortSummaryDto->getReferences(), EntityTypesEnum::map[EntityTypesEnum::TYPE_SHORT_SUMMARY]);
 
         array_map(
             fn (LinkDTO $link) => $chapter->addLink($link->getName(), $link->getValue()),
             $dto->getLinks()
             );
 
-        $chapter->addEntities($dto->getCharacters(), self::TYPE_CHARACTERS);
+        $chapter->addEntities($dto->getCharacters(), EntityTypesEnum::map[EntityTypesEnum::TYPE_CHARACTERS]);
 
         return $chapter;
     }

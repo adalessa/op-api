@@ -2,14 +2,15 @@
 
 namespace App\Services;
 
-use App\Models\Alias;
+use App\EntityTypesEnum;
 use App\Models\Chapter;
 use App\Models\Entity;
 
 class EncounterService
 {
     private array $aliases;
-    private int $type;
+    private int $typeId;
+    private string $type;
 
     public function of(array $aliases): self
     {
@@ -18,9 +19,10 @@ class EncounterService
         return $this;
     }
 
-    public function byType(int $type): self
+    public function byType(string $type): self
     {
         $this->type = $type;
+        $this->typeId = EntityTypesEnum::map[$type];
 
         return $this;
     }
@@ -31,7 +33,7 @@ class EncounterService
             return $query->whereIn('name', $this->aliases);
         })->get();
 
-        $chapters = Chapter::encounters($entities->pluck('id')->all(), $this->type)->get();
+        $chapters = Chapter::encounters($entities->pluck('id')->all(), $this->typeId)->get();
 
         return (new Encounter($entities, $chapters, $this->type));
     }

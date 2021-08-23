@@ -2,7 +2,7 @@
 
 namespace App\Http\Requests;
 
-use App\Models\Chapter;
+use App\EntityTypesEnum;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -14,7 +14,7 @@ class EntitiesEncountersRequest extends FormRequest
             'entities.*' => 'required|exists:aliases,name',
             'type' => [
                 'required',
-                Rule::in(Chapter::getAvailableTypes()),
+                Rule::in(array_keys(EntityTypesEnum::map)),
             ],
         ];
     }

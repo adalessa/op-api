@@ -23,12 +23,11 @@ me motiva para saber mas, ver las vinculaciones de personajes
 
 MPV
 - [X] Buscar encuentros
-- [ ] Buscar capitulo por numero
-- [ ] Buscar Entidad por un alias
-- [ ] Obtener todos los alias de una entidad (por id)
-- [ ] Hacer un recurso corto del capitulo
+- [X] Buscar capitulo por numero
+- [X] Buscar Entidad por un alias
+- [X] Obtener todos los alias de una entidad (por id)
+- [X] Hacer un recurso corto del capitulo
 
 
 ## TODO:
-- Entity type as it owns class, and move to string
 - Chapter by number since now is by id

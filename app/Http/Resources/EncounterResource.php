@@ -11,7 +11,7 @@ class EncounterResource extends JsonResource
         return [
             'times' => $this->getTimes(),
             'entities' => EntityResource::collection($this->getEntities()),
-            'chapters' => ChapterResource::collection($this->getChapters()),
+            'chapters' => ChapterBriefResource::collection($this->getChapters()),
         ];
     }
 }
