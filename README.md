@@ -2,73 +2,33 @@
 
 A chapter has information
 
-the cover resume
-the short summary
-the long summary
-
-the important is how interact with the tags
-
-the concept of references
-summary has references -> to (alias) -> goes to a tag
-
-rename alias to reference
-
-A reference belongs to an "entity" being a character or event or important
-
-we have aliases, an alias is a reference to a tag
-
-a tag is a link to another wiki page
-
-a section will use an alias to a tag, so the relations
-
-is that each section of the chapter will reference an alias
-and indirectly to a tag
-
-
-the api has create endpoints and it will reference to the relations
-
-
-The main important thing is what I want to answer with this application.
-
-The alias of a reference is somthing to add
-
-
-Can't think the main go or how will use it
-
-The main idea was to get stats, but not sure how will work or what answers I wat to respond
-
-From conversation the goal was make queries base on characters
-
-The idea was with the bot.
-
-Better I want a bot that scrools for new chapters in different sites and gives the chapter when is release
-
-The bot for chapter information, just need the bot to query directly the wiki, or the wiki downloaded html
-
-
-OK
-
-La idea es buscar por una entidad y obtener las relaciones y referencias
-
-Ask
-Shanks
-Reply
-Last seen: Chapter N
-First seen: Chapter N
-
-
-
-
-
-
+## Structure
+```
 Chapter
-    - portada
-        N Entidades
-    - shortSummary
-        N Entidades
-    - LongSummary
-        N Entidades
-    - Characters
-        N Entidades
+    Links
+    Entities of a Given types (cover, short summary, summary, characters)
+    Cover
+    ShortSummary
+    Summary
+    * Characters (Calculated field)
 
-ChapterId, EntitiyId, Type.
+Entity
+    N Aliases
+```
+
+## Goals:
+
+Dado que onepiece es una serie tan larga con tantas personajes,
+me motiva para saber mas, ver las vinculaciones de personajes
+
+MPV
+- [X] Buscar encuentros
+- [ ] Buscar capitulo por numero
+- [ ] Buscar Entidad por un alias
+- [ ] Obtener todos los alias de una entidad (por id)
+- [ ] Hacer un recurso corto del capitulo
+
+
+## TODO:
+- Entity type as it owns class, and move to string
+- Chapter by number since now is by id

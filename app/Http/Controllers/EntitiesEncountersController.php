@@ -11,7 +11,7 @@ use Spatie\RouteAttributes\Attributes\Prefix;
 #[Prefix('api/entities/encounters')]
 class EntitiesEncountersController
 {
-    #[Post('/search')]
+    #[Post('/search', name:'entities-encounters.search')]
     public function search(EntitiesEncountersRequest $request) {
 
         $validated = $request->validated();

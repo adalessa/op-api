@@ -18,7 +18,7 @@ it('returns the entity with the list of chapters', function() {
             'wiki_path' => '/wiki/zoro'
         ]);
 
-    get("/api/entities/chapters/zoro")
+    get(route('entity-chapter.show', 'zoro'))
         ->assertStatus(200)
         ->assertJsonCount(5, "data.chapters")
         ->assertJsonPath("data.name", "zoro")
@@ -38,7 +38,7 @@ it('returns all the types if no type is provided', function() {
             'wiki_path' => '/wiki/zoro'
         ]);
 
-    get("/api/entities/chapters/zoro")
+    get(route('entity-chapter.show', 'zoro'))
         ->assertStatus(200)
         ->assertJsonCount(5, "data.chapters")
         ->assertJsonPath("data.name", "zoro")
@@ -58,7 +58,7 @@ it('returns the any relationship if none is provided', function() {
             'wiki_path' => '/wiki/zoro'
         ]);
 
-    get("/api/entities/chapters/zoro")
+    get(route('entity-chapter.show', 'zoro'))
         ->assertStatus(200)
         ->assertJsonCount(5, "data.chapters")
         ->assertJsonPath("data.name", "zoro")
@@ -78,7 +78,7 @@ it('returns the given relationship on the request', function() {
             'wiki_path' => '/wiki/zoro'
         ]);
 
-    get("/api/entities/chapters/zoro?type=3")
+    get(route('entity-chapter.show', ['alias' => 'zoro', 'type' => 3]))
         ->assertStatus(200)
         ->assertJsonCount(5, "data.chapters")
         ->assertJsonPath("data.name", "zoro")
@@ -102,7 +102,7 @@ it('returns the entity with the list of chapters looking for an alias', function
             'wiki_path' => '/wiki/zoro'
         ]);
 
-    get("/api/entities/chapters/Roronoa")
+    get(route('entity-chapter.show', 'zoro'))
         ->assertStatus(200)
         ->assertJsonCount(5, "data.chapters")
         ->assertJsonPath("data.name", "zoro")

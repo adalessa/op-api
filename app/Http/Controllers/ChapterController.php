@@ -12,13 +12,13 @@ use Spatie\RouteAttributes\Attributes\Post;
 #[Prefix('api/chapters')]
 class ChapterController extends Controller
 {
-    #[Get('/{chapter}')]
+    #[Get('/{chapter}', name: 'chapters.show')]
     public function show(Chapter $chapter)
     {
         return new ChapterResource($chapter);
     }
 
-    #[Post('/')]
+    #[Post('/', name: 'chapters.create')]
     public function store(CreateChapterRequest $request)
     {
         $request->validated();

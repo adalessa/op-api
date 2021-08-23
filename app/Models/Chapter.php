@@ -63,6 +63,11 @@ class Chapter extends Model
         return $this->hasMany(Link::class);
     }
 
+    public function path(): string
+    {
+        return route('chapters.show', $this->id);
+    }
+
     public function addLink(string $site, string $url): static
     {
         $this->links()->create([

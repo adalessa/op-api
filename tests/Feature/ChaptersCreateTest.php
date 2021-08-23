@@ -8,7 +8,7 @@ use function PHPUnit\Framework\assertCount;
 use function PHPUnit\Framework\assertNotNull;
 
 it('creates a new chapter', function () {
-    $response = postJson('/api/chapters', getChapterData());
+    $response = postJson(route('chapters.create'), getChapterData());
 
     $response->assertStatus(201);
 
@@ -26,7 +26,7 @@ it('creates a new chapter', function () {
 });
 
 it("validates the chapter data", function ($field, $data, $error) {
-    postJson('/api/chapters', getChapterData([$field => $data]))
+    postJson(route('chapters.create'), getChapterData([$field => $data]))
         ->assertJsonValidationErrors($error);
 })->with([
     ['number',       null, 'number'],

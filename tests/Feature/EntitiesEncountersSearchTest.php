@@ -28,7 +28,7 @@ it('returns the chapter where 2 or more entities appears', function () {
     $chapters[2]->entities()->attach($sanji->id, ["type" => Chapter::TYPE_CHARACTERS]);
 
     postJson(
-        "/api/entities/encounters/search",
+        route('entities-encounters.search'),
         ["entities" => ["zoro", "sanji"], "type" => Chapter::TYPE_CHARACTERS]
     )->assertJsonPath('data.chapters.0.id', $chapters[1]->id)
      ->assertJsonCount(2, 'data.entities')
@@ -56,7 +56,7 @@ it('return a validation error if one of the entities does not exists', function(
     $chapters[2]->entities()->attach($sanji->id, ["type" => Chapter::TYPE_CHARACTERS]);
 
     postJson(
-        "/api/entities/encounters/search",
+        route('entities-encounters.search'),
         ["entities" => ["zoro", "sanji", "notfound"], "type" => Chapter::TYPE_CHARACTERS]
     )->assertJsonValidationErrors('entities.2');
 });
@@ -82,7 +82,7 @@ it('returns a validation error if the type is invalid', function() {
     $chapters[2]->entities()->attach($sanji->id, ["type" => Chapter::TYPE_CHARACTERS]);
 
     postJson(
-        "/api/entities/encounters/search",
+        route('entities-encounters.search'),
         ["entities" => ["zoro", "sanji"], "type" => 'invalid']
     )->assertJsonValidationErrors('type');
 
@@ -109,7 +109,7 @@ it('returns a validation error if the type is not present', function() {
     $chapters[2]->entities()->attach($sanji->id, ["type" => Chapter::TYPE_CHARACTERS]);
 
     postJson(
-        "/api/entities/encounters/search",
+        route('entities-encounters.search'),
         ["entities" => ["zoro", "sanji"]]
     )->assertJsonValidationErrors('type');
 });
@@ -139,7 +139,7 @@ it('returns the chapter where 2 or more entities appears searching with alias', 
     $chapters[2]->entities()->attach($sanji->id, ["type" => Chapter::TYPE_CHARACTERS]);
 
     postJson(
-        "/api/entities/encounters/search",
+        route('entities-encounters.search'),
         ["entities" => ["Roronoa", "sanji"], "type" => Chapter::TYPE_CHARACTERS]
     )->assertJsonPath('data.chapters.0.id', $chapters[1]->id)
      ->assertJsonCount(2, 'data.entities')
