@@ -13,8 +13,10 @@ class CreateAliasesTable extends Migration
             $table->id();
             $table->foreignIdFor(Entity::class);
             $table->boolean('default')->default(false);
-            $table->string('name')->unique();
+            $table->string('name');
             $table->timestamps();
+
+            $table->unique(['entity_id', 'name']);
         });
     }
 }

@@ -39,23 +39,19 @@ it("validates the chapter data", function ($field, $data, $error) {
     ['cover', ['text' => null], 'cover.text'],
     ['cover', ['image' => null], 'cover.image'],
     ['cover', ['image' => "not a url"], 'cover.image'],
-    ['cover', ['references' => []], 'cover.references'],
     ['cover', ['references' => [["name" => null]]], 'cover.references.0.name'],
     ['cover', ['references' => [["wiki" => null]]], 'cover.references.0.wiki'],
 
     ['short_summary', null, 'short_summary'],
     ['short_summary', ['text' => null], 'short_summary.text'],
-    ['short_summary', ['references' => []], 'short_summary.references'],
     ['short_summary', ['references' => [["name" => null]]], 'short_summary.references.0.name'],
     ['short_summary', ['references' => [["wiki" => null]]], 'short_summary.references.0.wiki'],
 
     ['summary', null, 'summary'],
     ['summary', ['text' => null], 'summary.text'],
-    ['summary', ['references' => []], 'summary.references'],
     ['summary', ['references' => [["name" => null]]], 'summary.references.0.name'],
     ['summary', ['references' => [["wiki" => null]]], 'summary.references.0.wiki'],
 
-    ['characters', [], 'characters'],
     ['characters', [["name" => null]], 'characters.0.name'],
     ['characters', [["wiki" => null]], 'characters.0.wiki'],
 ]);
@@ -88,6 +84,10 @@ function getChapterData(array $overwrite = []): array {
         'short_summary' => [
             'text' => 'details of the chapter',
             'references' => [
+                [
+                    'name' => 'luffy',
+                    'wiki' => '/wiki/Monkey_D._Luffy',
+                ],
                 [
                     'name' => 'luffy',
                     'wiki' => '/wiki/Monkey_D._Luffy',

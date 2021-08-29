@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Support\Facades\DB;
 
 class Chapter extends Model
 {
@@ -91,44 +92,47 @@ class Chapter extends Model
     }
 
     public static function fromDto(ChapterDTO $dto): self {
-        /** @var Chapter $chapter */
-        $chapter = self::firstOrCreate([
-            'number' => $dto->getNumber(),
-        ],[
-            'title' => $dto->getTitle(),
-            'release_date' => $dto->getReleaseDate(),
-        ]);
 
-        $chapter->removeEntities();
+        return DB::transaction(function() use ($dto){
+            /** @var Chapter $chapter */
+            $chapter = self::firstOrCreate([
+                'number' => $dto->getNumber(),
+            ],[
+                'title' => $dto->getTitle(),
+                'release_date' => $dto->getReleaseDate(),
+            ]);
 
-        $coverDto = $dto->getCover();
-        $chapter->cover()->create([
-            'text' => $coverDto->getText(),
-            'image' => $coverDto->getImage(),
-        ]);
-        $chapter->addEntities($coverDto->getReferences(), EntityTypesEnum::map[EntityTypesEnum::TYPE_COVER]);
+            $chapter->removeEntities();
 
-        $summaryDto = $dto->getSummary();
-        $chapter->summary()->create([
-            'text' => $summaryDto->getText(),
-        ]);
-        $chapter->addEntities($summaryDto->getReferences(), EntityTypesEnum::map[EntityTypesEnum::TYPE_SUMMARY]);
+            $coverDto = $dto->getCover();
+            $chapter->cover()->create([
+                'text' => $coverDto->getText(),
+                'image' => $coverDto->getImage(),
+            ]);
+            $chapter->addEntities($coverDto->getReferences(), EntityTypesEnum::map[EntityTypesEnum::TYPE_COVER]);
+
+            $summaryDto = $dto->getSummary();
+            $chapter->summary()->create([
+                'text' => $summaryDto->getText(),
+            ]);
+            $chapter->addEntities($summaryDto->getReferences(), EntityTypesEnum::map[EntityTypesEnum::TYPE_SUMMARY]);
 
 
-        $shortSummaryDto = $dto->getShortSummary();
-        $chapter->shortSummary()->create([
-            'text' => $shortSummaryDto->getText(),
-        ]);
-        $chapter->addEntities($shortSummaryDto->getReferences(), EntityTypesEnum::map[EntityTypesEnum::TYPE_SHORT_SUMMARY]);
+            $shortSummaryDto = $dto->getShortSummary();
+            $chapter->shortSummary()->create([
+                'text' => $shortSummaryDto->getText(),
+            ]);
+            $chapter->addEntities($shortSummaryDto->getReferences(), EntityTypesEnum::map[EntityTypesEnum::TYPE_SHORT_SUMMARY]);
 
-        array_map(
-            fn (LinkDTO $link) => $chapter->addLink($link->getName(), $link->getValue()),
-            $dto->getLinks()
-            );
+            array_map(
+                fn (LinkDTO $link) => $chapter->addLink($link->getName(), $link->getValue()),
+                $dto->getLinks()
+                );
 
-        $chapter->addEntities($dto->getCharacters(), EntityTypesEnum::map[EntityTypesEnum::TYPE_CHARACTERS]);
+            $chapter->addEntities($dto->getCharacters(), EntityTypesEnum::map[EntityTypesEnum::TYPE_CHARACTERS]);
 
-        return $chapter;
+            return $chapter;
+        });
     }
 
     /**
@@ -136,12 +140,12 @@ class Chapter extends Model
      */
     private function addEntities(array $references, int $type): void
     {
-        collect($references)
+        collect($references)->unique(fn (Reference $ref) => $ref->getWiki())
             ->map(function (Reference $ref) {
                 /** @var Entity $entity */
                 $entity = Entity::firstOrCreate(['wiki_path' => $ref->getWiki()]);
 
-                $entity->aliases()->firstOrCreate(['name' => $ref->getName(), 'default' => $entity->wasRecentlyCreated]);
+                $entity->aliases()->firstOrCreate(['name' => $ref->getName()], ['default' => $entity->wasRecentlyCreated]);
 
                 return $entity;
             })

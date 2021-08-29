@@ -9,7 +9,7 @@ use Spatie\RouteAttributes\Attributes\Prefix;
 use Spatie\RouteAttributes\Attributes\Get;
 use Spatie\RouteAttributes\Attributes\Post;
 
-#[Prefix('api/chapters')]
+#[Prefix('/api/chapters')]
 class ChapterController extends Controller
 {
     #[Get('/{chapter:number}', name: 'chapters.show')]

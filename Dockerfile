@@ -15,6 +15,7 @@ COPY composer.json .
 COPY composer.lock .
 RUN composer install --no-scripts
 COPY . .
+COPY entrypoint.sh entrypoint.sh
 RUN chmod 777 -R storage
 
-CMD php artisan serve --host=0.0.0.0 --port 80
+ENTRYPOINT ["./entrypoint.sh"]
