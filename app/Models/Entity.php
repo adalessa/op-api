@@ -9,6 +9,27 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
+/**
+ * App\Models\Entity
+ *
+ * @property int $id
+ * @property string $wiki_path
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Alias[] $aliases
+ * @property-read int|null $aliases_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Chapter[] $chapters
+ * @property-read int|null $chapters_count
+ * @method static \Database\Factories\EntityFactory factory(...$parameters)
+ * @method static \Illuminate\Database\Eloquent\Builder|Entity newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Entity newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Entity query()
+ * @method static \Illuminate\Database\Eloquent\Builder|Entity whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Entity whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Entity whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Entity whereWikiPath($value)
+ * @mixin \Eloquent
+ */
 class Entity extends Model
 {
     use HasFactory;

@@ -14,6 +14,43 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Facades\DB;
 
+/**
+ * App\Models\Chapter
+ *
+ * @property int $id
+ * @property int $number
+ * @property string $title
+ * @property \Illuminate\Support\Carbon $release_date
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Entity[] $characters
+ * @property-read int|null $characters_count
+ * @property-read \App\Models\Cover|null $cover
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Entity[] $coverReferences
+ * @property-read int|null $cover_references_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Entity[] $entities
+ * @property-read int|null $entities_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Link[] $links
+ * @property-read int|null $links_count
+ * @property-read \App\Models\ShortSummary|null $shortSummary
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Entity[] $shortSummaryReferences
+ * @property-read int|null $short_summary_references_count
+ * @property-read \App\Models\Summary|null $summary
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Entity[] $summaryReferences
+ * @property-read int|null $summary_references_count
+ * @method static Builder|Chapter encounters(array $entitiesIds, int $type)
+ * @method static \Database\Factories\ChapterFactory factory(...$parameters)
+ * @method static Builder|Chapter newModelQuery()
+ * @method static Builder|Chapter newQuery()
+ * @method static Builder|Chapter query()
+ * @method static Builder|Chapter whereCreatedAt($value)
+ * @method static Builder|Chapter whereId($value)
+ * @method static Builder|Chapter whereNumber($value)
+ * @method static Builder|Chapter whereReleaseDate($value)
+ * @method static Builder|Chapter whereTitle($value)
+ * @method static Builder|Chapter whereUpdatedAt($value)
+ * @mixin \Eloquent
+ */
 class Chapter extends Model
 {
     use HasFactory;
