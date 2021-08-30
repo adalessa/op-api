@@ -29,11 +29,14 @@ class EncounterService
 
     public function get(): Encounter
     {
-        $entities = Entity::whereHas('aliases', function($query) {
+        $entities = Entity::whereHas('aliases', function ($query) {
             return $query->whereIn('name', $this->aliases);
         })->get();
 
-        $chapters = Chapter::with('links')->encounters($entities->pluck('id')->all(), $this->typeId)->get();
+        $chapters = Chapter::with('links')
+            ->encounters($entities->pluck('id')->all(), $this->typeId)
+            ->orderBy('number')
+            ->get();
 
         return (new Encounter($entities, $chapters, $this->type));
     }
