@@ -19,8 +19,7 @@ class ChapterBriefResource extends JsonResource
             'number' => $this->number,
             'title' => $this->title,
             'release_date' => $this->release_date->toDateString(),
-            'manga' => $this->manga_url,
-            'wiki' => $this->wiki_url,
+            'links' => LinkResource::collection($this->links),
         ];
     }
 }

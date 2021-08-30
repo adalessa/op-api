@@ -33,7 +33,7 @@ class EncounterService
             return $query->whereIn('name', $this->aliases);
         })->get();
 
-        $chapters = Chapter::encounters($entities->pluck('id')->all(), $this->typeId)->get();
+        $chapters = Chapter::with('links')->encounters($entities->pluck('id')->all(), $this->typeId)->get();
 
         return (new Encounter($entities, $chapters, $this->type));
     }

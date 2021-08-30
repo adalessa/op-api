@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\EntitiesEncountersRequest;
 use App\Http\Resources\EncounterResource;
-use Facades\App\Services\EncounterService;
+use App\Services\EncounterService;
 use Spatie\RouteAttributes\Attributes\Post;
 use Spatie\RouteAttributes\Attributes\Prefix;
 
@@ -12,11 +12,14 @@ use Spatie\RouteAttributes\Attributes\Prefix;
 class EntitiesEncountersController
 {
     #[Post('/search', name:'entities-encounters.search')]
-    public function search(EntitiesEncountersRequest $request) {
+    public function search(
+        EncounterService $encounterService,
+        EntitiesEncountersRequest $request,
+    ) {
 
         $validated = $request->validated();
 
-        $encounter = EncounterService::of($validated['entities'])
+        $encounter = $encounterService->of($validated['entities'])
             ->byType($validated['type'])
             ->get();
 
