@@ -10,7 +10,6 @@ class AliasResource extends JsonResource
     {
         return [
             'name' => $this->name,
-            'default' => $this->default,
         ];
     }
 }

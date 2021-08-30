@@ -8,6 +8,9 @@ class LinkResource extends JsonResource
 {
     public function toArray($request)
     {
-        return parent::toArray($request);
+        return [
+            'site' => $this->site,
+            'url' => $this->url,
+        ];
     }
 }

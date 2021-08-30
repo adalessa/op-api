@@ -15,8 +15,7 @@ class ChapterBriefResource extends JsonResource
     public function toArray($request): array
     {
         return [
-            'id' => $this->id,
-            'number' => $this->number,
+            'number' => (int) $this->number,
             'title' => $this->title,
             'release_date' => $this->release_date->toDateString(),
             'links' => LinkResource::collection($this->links),

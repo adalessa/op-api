@@ -31,7 +31,7 @@ it('returns the chapter where 2 or more entities appears', function () {
     postJson(
         route('entities-encounters.search'),
         ["entities" => ["zoro", "sanji"], "type" => EntityTypesEnum::TYPE_CHARACTERS]
-    )->assertJsonPath('data.chapters.0.id', $chapters[1]->id)
+    )->assertJsonPath('data.chapters.0.number', $chapters[1]->number)
      ->assertJsonCount(2, 'data.entities')
      ->assertJsonPath('data.times', 1);
 });
@@ -142,7 +142,7 @@ it('returns the chapter where 2 or more entities appears searching with alias', 
     postJson(
         route('entities-encounters.search'),
         ["entities" => ["Roronoa", "sanji"], "type" => EntityTypesEnum::TYPE_CHARACTERS]
-    )->assertJsonPath('data.chapters.0.id', $chapters[1]->id)
+    )->assertJsonPath('data.chapters.0.number', $chapters[1]->number)
      ->assertJsonCount(2, 'data.entities')
      ->assertJsonPath('data.times', 1);
 });
