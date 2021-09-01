@@ -1,4 +1,4 @@
-name: Laravel
+name: CI
 
 on:
   push:
@@ -33,3 +33,20 @@ jobs:
         DB_CONNECTION: sqlite
         DB_DATABASE: database/database.sqlite
       run: vendor/bin/pest
+
+  docker:
+    runs-on: ubuntu-latest
+    steps:
+    -
+      name: Login to DockerHub
+      uses: docker/login-action@v1
+      with:
+        username: ${{ secrets.DOCKERHUB_USERNAME }}
+        password: ${{ secrets.DOCKERHUB_TOKEN }}
+    -
+      name: Build and push
+      id: docker_build
+      uses: docker/build-push-action@v2
+      with:
+        push: true
+        tags: adalessa/op-api:latest
