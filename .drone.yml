@@ -16,8 +16,11 @@ steps:
 - name: docker
   image: plugins/docker
   settings:
-    repo: registry.ad-impeldown.synology.me/op-api
-    registry: registry.ad-impeldown.synology.me
+    username:
+      from_secret: docker_username
+    password:
+      from_secret: docker_password
+    repo: adalessa/op-api
     storage_driver: vfs
     tags:
       - latest
