@@ -15,6 +15,6 @@ steps:
 - name: docker
   image: plugins/docker
   settings:
-    repo: registry.ad-impeldown.synology.me/op-api
-    registry: registry.ad-impeldown.synology.me
+    repo: 192.168.2.200:5050/op-api
+    registry: 192.168.2.200:5050
     storage_driver: vfs
