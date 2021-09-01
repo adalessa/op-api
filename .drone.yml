@@ -11,3 +11,9 @@ steps:
   image: php:8.0
   commands:
   - php artisan test
+
+- name: docker
+  image: plugins/docker
+  settings:
+    repo: registry.ad-impeldown.synology.me/op-api
+    registry: registry.ad-impeldown.synology.me
