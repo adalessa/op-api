@@ -1,0 +1,10 @@
+POST https://op-api.ad-impeldown.synology.me/api/entities/encounters/search HTTP/1.1
+Host: op-api.ad-impeldown.synology.me
+Content-Type: application/json
+Accept: application/json
+Content-Length: 59
+
+{
+    "entities": ["Shanks"],
+    "type": "characters"
+}
