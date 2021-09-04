@@ -22,8 +22,9 @@ class ChapterResource extends JsonResource
                 'image' => $this->cover?->image,
                 'text' => $this->cover?->text,
             ],
-            'short_summary' => $this->short_summary?->text,
+            'short_summary' => $this->shortSummary?->text,
             'summary' => $this->summary?->text,
+            'links' => LinkResource::collection($this->links),
         ];
     }
 }

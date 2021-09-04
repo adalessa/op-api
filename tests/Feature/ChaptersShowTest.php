@@ -23,6 +23,7 @@ it('can get a chapter', function () {
                 ],
                 'short_summary',
                 'summary',
+                'links',
             ]
         ]);
 });
