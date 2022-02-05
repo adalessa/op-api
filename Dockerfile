@@ -1,4 +1,4 @@
-FROM adalessa/php-laravel:8.0
+FROM adalessa/php-laravel:8.1
 
 WORKDIR /app
 COPY composer.json .
