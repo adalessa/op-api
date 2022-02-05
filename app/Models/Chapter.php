@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Facades\DB;
+use Laravel\Scout\Searchable;
 
 /**
  * App\Models\Chapter
@@ -54,6 +55,7 @@ use Illuminate\Support\Facades\DB;
 class Chapter extends Model
 {
     use HasFactory;
+    use Searchable;
 
     public $guarded = [];
 
